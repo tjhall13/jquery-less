@@ -1,0 +1,16 @@
+{
+  "name": "jquery-less",
+  "version": "0.1.0",
+  "description": "jQuery plugin to allow less syntax in place of css for parameterized styles.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jquery",
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "less"
+  ],
+  "author": "Trevor Hall",
+  "license": "MIT"
+}
