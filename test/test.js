@@ -31,15 +31,7 @@ var globals = {
         return new Selection();
     }
 };
-
-globals.jQuery.fn = {
-    add: function($sel) {
-        _selection.push($sel._selection);
-    },
-    not: function($sel) {
-        
-    }
-};
+globals.jQuery.fn = { };
 
 module.exports = {
     inline: {
