@@ -59,8 +59,13 @@
                     less.call(this, member, prop[member]);
                 }
             } else {
-                // Return current css properties for property(s)
-                return this.css(prop);
+                if(typeof prop == 'string' && prop.charAt(0) == '@') {
+                    // Get contextual variable value
+                    return value[prop];
+                } else {
+                    // Return current css properties for property(s)
+                    return this.css(prop);
+                }
             }
         }
     };
