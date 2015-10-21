@@ -1,0 +1,6 @@
+# generated files
+**/*.min.js
+
+# dependencies
+node_modules/
+bower_modules/

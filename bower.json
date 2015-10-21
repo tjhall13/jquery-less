@@ -1,0 +1,26 @@
+{
+  "name": "jquery-less",
+  "description": "jQuery plugin to allow less syntax in place of css for parameterized styles.",
+  "main": "jquery.less.js",
+  "authors": [
+    "Trevor Hall"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "jquery",
+    "jquery-plugin",
+    "ecosystem:jquery",
+    "less"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "ignore": [
+    "**/.*",
+    "*.md",
+    "Gruntfile.js",
+    "node_modules",
+    "bower_components",
+    "test/"
+  ]
+}
