@@ -29,9 +29,12 @@
     $.fn.less = function(prop, value) {
         // Add less properties dependent on variables
         if(value) {
-            if(typeof value === 'string' && value.charAt(0) == '@') {
-                // Add selection to variables map
-                addSelection(this, prop, value);
+            if(typeof value == 'string' && value.charAt(0) == '@') {
+                if(value.charAt(1) != '@') {
+                    // If it is not a constant, add selection
+                    // to variables map
+                    addSelection(this, prop, value);
+                }
 
                 value = values[value];
                 if(value) {
