@@ -26,7 +26,7 @@
         }
     }
 
-    $.fn.less = function(prop, value) {
+    $.fn.less = function less(prop, value) {
         // Add less properties dependent on variables
         if(value) {
             if(typeof value == 'string' && value.charAt(0) == '@') {
@@ -52,8 +52,16 @@
                 return this.css(prop, value);
             }
         } else {
-            // Return current css properties for property
-            return this.css(prop);
+            if(typeof prop == 'object' && !Array.isArray(prop)) {
+                // For each property in the object, call this
+                // function with the associated value
+                for(var member in prop) {
+                    less.call(this, member, prop[member]);
+                }
+            } else {
+                // Return current css properties for property(s)
+                return this.css(prop);
+            }
         }
     };
 
