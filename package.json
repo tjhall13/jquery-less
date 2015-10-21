@@ -11,6 +11,10 @@
     "ecosystem:jquery",
     "less"
   ],
+  "repository" : {
+    "type" : "git",
+    "url" : "git+https://github.com/tjhall13/jquery-less.git"
+  },
   "author": "Trevor Hall",
   "license": "MIT",
   "devDependencies": {
