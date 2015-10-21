@@ -2,7 +2,7 @@
     var variables = { };
     var values = [{ }];
 
-    function addSelection(prop, name) {
+    function add(prop, name) {
         var properties;
         if(variables[name]) {
             properties = variables[name];
@@ -18,7 +18,7 @@
         }
     }
 
-    function removeSelection(prop) {
+    function remove(prop) {
         for(var name in variables) {
             if(variables[name][prop]) {
                 variables[name][prop] = variables[name][prop].not(this);
@@ -27,39 +27,36 @@
     }
 
     function resolve(name, value) {
-        var index;
+        var scope;
         if(this) {
             // If this is not null find scope
             // TODO: find scope
-            index = 0;
+            scope = values[0];
         } else {
             // If this is null use global scope
-            index = 0;
+            scope = values[0];
         }
         if(value === undefined) {
             // Get value for variable name
-            return values[index][name];
+            return scope[name];
         } else {
             // Set value for variable name
-            values[index][name] = value;
+            scope[name] = value;
         }
     }
 
     $.fn.less = function less(prop, value) {
         if(typeof prop == 'string' && prop.charAt(0) == '@') {
-            if(value) {
-                // Set contextual variable value
-            } else {
-                // Get contextual variable value
-            }
+            // Get/Set contextual variable
+            return resolve.call(this, prop, value);
         } else {
             // Add less properties dependent on variables
-            if(value) {
+            if(value !== undefined) {
                 if(typeof value == 'string' && value.charAt(0) == '@') {
                     if(value.charAt(1) != '@') {
                         // If it is not a constant, add selection
                         // to variables map
-                        addSelection.call(this, prop, value);
+                        add.call(this, prop, value);
                     }
 
                     value = resolve.call(this, value);
@@ -73,7 +70,7 @@
                     }
                 } else {
                     // Remove selection from variables map
-                    removeSelection.call(this, prop);
+                    remove.call(this, prop);
 
                     return this.css(prop, value);
                 }
