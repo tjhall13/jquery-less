@@ -156,8 +156,4 @@
             return resolve(name);
         }
     };
-
-    $._less = function() {
-        return variables;
-    };
 })(jQuery);
