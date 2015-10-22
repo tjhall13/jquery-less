@@ -5,8 +5,12 @@ var less = fs.readFileSync(require.resolve('../jquery.less.min.js'));
 var script = new vm.Script(less);
 var globals = {
     jQuery: function jQuery(selector) {
-        function Selection() {
-            this._selection = [selector];
+        function Selection(selector) {
+            if(selector) {
+                this._selection = [selector];
+            } else {
+                this._selection = [];
+            }
 
             this.add = function($sel) {
                 var output = new Selection();
@@ -28,8 +32,9 @@ var globals = {
             };
         }
         Selection.prototype = jQuery.fn;
-        return new Selection();
-    }
+        return new Selection(selector);
+    },
+    console: console
 };
 globals.jQuery.fn = { };
 
@@ -160,6 +165,23 @@ module.exports = {
             };
             $.less('@size', 24);
 
+            $.less('@width', '2px');
+            $.less('@color', '#000');
+            $.fn.css = function(prop, value) {
+                test.setEqual(this._selection, ['.test']);
+                test.equal(prop, 'border-bottom');
+                test.equal(value, '2px solid #000');
+            };
+            $('.test').less('border-bottom', '@width solid @color');
+
+            $.fn.css = function(prop, value) {
+                test.setEqual(this._selection, ['.test']);
+                test.equal(prop, 'border-bottom');
+                test.equal(value, '4px solid #000');
+            };
+            $.less('@width', '4px');
+
+            test.expect(33);
             test.done();
         }
     },
