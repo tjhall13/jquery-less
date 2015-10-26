@@ -1,10 +1,11 @@
 {
   "name": "jquery-less",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "jQuery plugin to allow less syntax in place of css for parameterized styles.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "main": "jquery.less.js",
   "keywords": [
     "jquery",
     "jquery-plugin",
