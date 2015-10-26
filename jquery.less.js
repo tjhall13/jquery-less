@@ -4,36 +4,36 @@
 
     var constant = /^[^@]+$/;
 
-    function add(prop, value, query) {
-        if(!query) {
-            query = value;
+    function add(prop, value, definition) {
+        if(!definition) {
+            definition = value;
         }
-        var properties, queries;
+        var properties, definitions;
         if(variables[value]) {
             properties = variables[value];
             if(properties[prop]) {
-                queries = properties[prop];
-                if(queries[query]) {
-                    queries[query] = properties[prop][query].add(this);
+                definitions = properties[prop];
+                if(definitions[definition]) {
+                    definitions[definition] = properties[prop][definition].add(this);
                 } else {
-                    properties[prop][query] = this;
+                    properties[prop][definition] = this;
                 }
             } else {
                 properties[prop] = { };
-                properties[prop][query] = this;
+                properties[prop][definition] = this;
             }
         } else {
             variables[value] = { };
             variables[value][prop] = { };
-            variables[value][prop][query] = this;
+            variables[value][prop][definition] = this;
         }
     }
 
     function remove(prop) {
         for(var name in variables) {
             if(variables[name][prop]) {
-                for(var query in variables[name][prop]) {
-                    variables[name][prop][query] = variables[name][prop][query].not(this);
+                for(var definition in variables[name][prop]) {
+                    variables[name][prop][definition] = variables[name][prop][definition].not(this);
                 }
             }
         }
@@ -41,11 +41,11 @@
 
     function update(prop, value) {
         var values = String(value).trim().split(/\s+/);
-        var query = values.join(' ');
+        var definition = values.join(' ');
         var unbound = true;
         for(var i = 0; i < values.length; i++) {
             if(!constant.test(values[i])) {
-                add.call(this, prop, values[i], query);
+                add.call(this, prop, values[i], definition);
                 unbound = false;
             }
         }
@@ -97,12 +97,12 @@
         }
     }
 
-    function queryResolve(query) {
+    function find(definition) {
         return function(value) {
             if(constant.test(value)) {
                 return value;
             } else {
-                return resolve.call(query, value);
+                return resolve.call(definition, value);
             }
         };
     }
@@ -141,13 +141,13 @@
                 // For each property using this variable, update
                 // the css
                 for(var prop in properties) {
-                    var queries = properties[prop];
-                    if(queries) {
+                    var definitions = properties[prop];
+                    if(definitions) {
                         // For each property value in this
                         // property, update the css
-                        for(var query in queries) {
-                            value = query.split(' ').map(queryResolve(queries[query])).join(' ');
-                            queries[query].css(prop, value);
+                        for(var definition in definitions) {
+                            value = definition.split(' ').map(find(definitions[definition])).join(' ');
+                            definitions[definition].css(prop, value);
                         }
                     }
                 }
