@@ -80,7 +80,7 @@
 
     function resolve(name, value) {
         var scope;
-        if(this) {
+        if(this.valueOf()) {
             // If this is not null find scope
             // TODO: find scope
             scope = values[0];
@@ -88,12 +88,30 @@
             // If this is null use global scope
             scope = values[0];
         }
-        if(value === undefined) {
-            // Get value for variable name
-            return scope[name];
-        } else {
+        if(value) {
             // Set value for variable name
             scope[name] = value;
+            // Update values for scope
+            var properties = variables[name];
+            if(properties) {
+                // For each property using this variable, update
+                // the css
+                for(var prop in properties) {
+                    var definitions = properties[prop];
+                    if(definitions) {
+                        // For each property value in this
+                        // property, update the css
+                        for(var definition in definitions) {
+                            value = definition.split(' ').map(find(definitions[definition])).join(' ');
+                            // TODO: check if within scope
+                            definitions[definition].css(prop, value);
+                        }
+                    }
+                }
+            }
+        } else {
+            // Get value for variable name
+            return scope[name];
         }
     }
 
@@ -107,53 +125,39 @@
         };
     }
 
-    $.fn.less = function less(prop, value) {
-        if(typeof prop == 'string' && prop.charAt(0) == '@') {
-            // Get/Set contextual variable
-            return resolve.call(this, prop, value);
-        } else {
-            // Add less properties dependent on variables
-            if(value !== undefined) {
+    function less(prop, value) {
+        if(constant.test(prop)) {
+            if(value && typeof prop == 'string') {
+                // Set property value
                 update.call(this, prop, value);
             } else {
+                // Get property value
                 if(typeof prop == 'object' && !Array.isArray(prop)) {
-                    // For each property in the object, call this
-                    // function with the associated value
+                    // For each property in the object call
+                    // this function with the associated value
                     for(var member in prop) {
                         less.call(this, member, prop[member]);
                     }
                 } else {
-                    // Return current css value for property(s)
-                    return this.css(prop);
-                }
-            }
-        }
-    };
-
-    $.less = function(name, value) {
-        // Set global variable values
-        if(value) {
-            // Set the variable with name to value
-            resolve(name, value);
-
-            var properties = variables[name];
-            if(properties) {
-                // For each property using this variable, update
-                // the css
-                for(var prop in properties) {
-                    var definitions = properties[prop];
-                    if(definitions) {
-                        // For each property value in this
-                        // property, update the css
-                        for(var definition in definitions) {
-                            value = definition.split(' ').map(find(definitions[definition])).join(' ');
-                            definitions[definition].css(prop, value);
-                        }
+                    if(this.valueOf()) {
+                        // Return current css value for property(s)
+                        return this.css(prop);
+                    } else {
+                        return undefined;
                     }
                 }
             }
         } else {
-            return resolve(name);
+            // Get or Set variable
+            return resolve.call(this, prop, value);
         }
+    }
+
+    $.fn.less = function(prop, value) {
+        return less.call(this, prop, value);
+    };
+
+    $.less = function(prop, value) {
+        return less.call(false, prop, value);
     };
 })(jQuery);
